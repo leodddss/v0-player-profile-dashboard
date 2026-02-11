@@ -10,84 +10,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-interface Match {
-  id: number
-  date: string
-  result: "Win" | "Loss"
-  map: string
-  eloChange: number
-  duration: string
-}
-
-const matches: Match[] = [
-  {
-    id: 1,
-    date: "Feb 11, 2026",
-    result: "Win",
-    map: "Arsenal Ruins",
-    eloChange: 25,
-    duration: "14:32",
-  },
-  {
-    id: 2,
-    date: "Feb 11, 2026",
-    result: "Win",
-    map: "Neon District",
-    eloChange: 22,
-    duration: "18:05",
-  },
-  {
-    id: 3,
-    date: "Feb 10, 2026",
-    result: "Loss",
-    map: "Sky Fortress",
-    eloChange: -25,
-    duration: "12:47",
-  },
-  {
-    id: 4,
-    date: "Feb 10, 2026",
-    result: "Win",
-    map: "Arsenal Ruins",
-    eloChange: 28,
-    duration: "16:21",
-  },
-  {
-    id: 5,
-    date: "Feb 9, 2026",
-    result: "Loss",
-    map: "Cyber Grid",
-    eloChange: -19,
-    duration: "20:10",
-  },
-  {
-    id: 6,
-    date: "Feb 9, 2026",
-    result: "Win",
-    map: "Neon District",
-    eloChange: 25,
-    duration: "15:43",
-  },
-  {
-    id: 7,
-    date: "Feb 8, 2026",
-    result: "Win",
-    map: "Sky Fortress",
-    eloChange: 30,
-    duration: "11:55",
-  },
-  {
-    id: 8,
-    date: "Feb 8, 2026",
-    result: "Loss",
-    map: "Cyber Grid",
-    eloChange: -25,
-    duration: "22:08",
-  },
-]
+import { useApp } from "@/lib/app-context"
+import { matches } from "@/lib/match-data"
 
 export function MatchHistory() {
+  const { setSelectedMatch } = useApp()
+
   return (
     <section className="rounded-xl border border-border bg-card">
       {/* Section header */}
@@ -109,7 +37,9 @@ export function MatchHistory() {
             <TableHead className="text-muted-foreground">Date</TableHead>
             <TableHead className="text-muted-foreground">Result</TableHead>
             <TableHead className="text-muted-foreground">Map</TableHead>
-            <TableHead className="text-muted-foreground">Duration</TableHead>
+            <TableHead className="hidden text-muted-foreground sm:table-cell">
+              Duration
+            </TableHead>
             <TableHead className="text-right text-muted-foreground">
               Elo Change
             </TableHead>
@@ -119,7 +49,16 @@ export function MatchHistory() {
           {matches.map((match) => (
             <TableRow
               key={match.id}
-              className="border-border transition-colors hover:bg-secondary/50"
+              className="cursor-pointer border-border transition-colors hover:bg-secondary/50"
+              onClick={() => setSelectedMatch(match)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  setSelectedMatch(match)
+                }
+              }}
             >
               <TableCell className="text-sm text-muted-foreground">
                 {match.date}
@@ -138,7 +77,7 @@ export function MatchHistory() {
               <TableCell className="text-sm font-medium text-foreground">
                 {match.map}
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground font-mono">
+              <TableCell className="hidden text-sm text-muted-foreground font-mono sm:table-cell">
                 {match.duration}
               </TableCell>
               <TableCell className="text-right">

@@ -1,9 +1,21 @@
+"use client"
+
 import { Shield, Trophy, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { useApp } from "@/lib/app-context"
+import { cn } from "@/lib/utils"
 
 const RANK = 7
 const RANK_TITLE = "Diamond"
+
+const FRAME_STYLES: Record<string, { border: string; glow: string }> = {
+  none: { border: "border-primary/30", glow: "" },
+  bronze: { border: "border-[hsl(30,60%,50%)]", glow: "bg-[hsl(30,60%,50%)]/20" },
+  silver: { border: "border-[hsl(215,20%,65%)]", glow: "bg-[hsl(215,20%,65%)]/20" },
+  gold: { border: "border-[hsl(45,93%,58%)]", glow: "bg-[hsl(45,93%,58%)]/20" },
+  neon: { border: "border-primary", glow: "bg-primary/20" },
+}
 
 function RankBadge({ rank }: { rank: number }) {
   return (
@@ -24,6 +36,9 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 export function HeroSection() {
+  const { profile } = useApp()
+  const frameStyle = FRAME_STYLES[profile.frame] ?? FRAME_STYLES.none
+
   return (
     <section className="relative overflow-hidden rounded-xl border border-border bg-card p-6 md:p-8">
       {/* Subtle background gradient */}
@@ -32,15 +47,15 @@ export function HeroSection() {
       <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
         {/* Avatar */}
         <div className="relative">
-          <div className="absolute -inset-1 rounded-full bg-primary/20 blur-md" />
-          <Avatar className="relative h-28 w-28 border-2 border-primary/30 md:h-32 md:w-32">
+          <div className={cn("absolute -inset-1 rounded-full blur-md", frameStyle.glow || "bg-primary/20")} />
+          <Avatar className={cn("relative h-28 w-28 border-2 md:h-32 md:w-32", frameStyle.border)}>
             <AvatarImage
-              src="/avatar.jpg"
-              alt="Player_1 avatar"
+              src={profile.avatar || "/placeholder.svg"}
+              alt={`${profile.username} avatar`}
               className="object-cover"
             />
             <AvatarFallback className="bg-secondary text-2xl text-muted-foreground">
-              P1
+              {profile.username.slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           {/* Online indicator */}
@@ -51,7 +66,7 @@ export function HeroSection() {
         <div className="flex flex-1 flex-col items-center gap-3 sm:items-start">
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl text-balance">
-              Player_1
+              {profile.username}
             </h1>
             <Badge className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15">
               <Trophy className="mr-1 h-3 w-3" />
