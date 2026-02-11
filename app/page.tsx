@@ -7,6 +7,7 @@ import { MatchHistory } from "@/components/dashboard/match-history"
 import { MatchDetail } from "@/components/dashboard/match-detail"
 import { Leaderboard } from "@/components/dashboard/leaderboard"
 import { SettingsPage } from "@/components/dashboard/settings-page"
+import { PlayerProfileView } from "@/components/dashboard/player-profile"
 import { LandingPage } from "@/components/landing-page"
 import { AppProvider, useApp } from "@/lib/app-context"
 
@@ -18,7 +19,10 @@ function DashboardView() {
   }
 
   return (
-    <div key={`dashboard-${animationKey}`} className="flex flex-col gap-8 animate-page-in">
+    <div
+      key={`dashboard-${animationKey}`}
+      className="flex flex-col gap-8 animate-page-in"
+    >
       <HeroSection />
       <StatsGrid />
       <MatchHistory />
@@ -40,6 +44,11 @@ function PageContent() {
       {currentPage === "settings" && (
         <div key={`settings-${animationKey}`}>
           <SettingsPage />
+        </div>
+      )}
+      {currentPage === "profile" && (
+        <div key={`profile-${animationKey}`}>
+          <PlayerProfileView />
         </div>
       )}
     </main>

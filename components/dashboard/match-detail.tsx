@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/table"
 import { useApp } from "@/lib/app-context"
 import type { TeamPlayer } from "@/lib/app-context"
+import { findPlayer } from "@/lib/player-data"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
@@ -30,24 +31,33 @@ function TeamRoster({
   players,
   side,
   isWinner,
+  onPlayerClick,
 }: {
   players: TeamPlayer[]
   side: "CT" | "T"
   isWinner: boolean
+  onPlayerClick: (name: string) => void
 }) {
   const totalKills = players.reduce((sum, p) => sum + p.kills, 0)
   const totalDeaths = players.reduce((sum, p) => sum + p.deaths, 0)
 
   const isCT = side === "CT"
   const sideLabel = isCT ? "Counter-Terrorists" : "Terrorists"
-  const sideColor = isCT ? "text-[hsl(199,89%,48%)]" : "text-[hsl(45,93%,58%)]"
+  const sideColor = isCT
+    ? "text-[hsl(199,89%,48%)]"
+    : "text-[hsl(45,93%,58%)]"
   const sideBorderColor = isCT
     ? "border-[hsl(199,89%,48%)]/20"
     : "border-[hsl(45,93%,58%)]/20"
   const SideIcon = isCT ? Shield : Crosshair
 
   return (
-    <div className={cn("rounded-xl border bg-card overflow-hidden", sideBorderColor)}>
+    <div
+      className={cn(
+        "overflow-hidden rounded-xl border bg-card",
+        sideBorderColor,
+      )}
+    >
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           <SideIcon className={cn("h-4 w-4", sideColor)} />
@@ -60,7 +70,7 @@ function TeamRoster({
             </Badge>
           )}
         </div>
-        <span className="text-xs text-muted-foreground font-mono">
+        <span className="font-mono text-xs text-muted-foreground">
           {totalKills}K / {totalDeaths}D
         </span>
       </div>
@@ -89,31 +99,43 @@ function TeamRoster({
           {players.map((player) => (
             <TableRow
               key={player.name}
-              className="border-border transition-colors hover:bg-secondary/30"
+              className="cursor-pointer border-border transition-colors hover:bg-secondary/30"
+              onClick={() => onPlayerClick(player.name)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault()
+                  onPlayerClick(player.name)
+                }
+              }}
             >
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Avatar className="h-7 w-7 border border-border">
-                    <AvatarImage src={player.avatar || "/placeholder.svg"} alt={player.name} />
+                    <AvatarImage
+                      src={player.avatar || "/placeholder.svg"}
+                      alt={player.name}
+                    />
                     <AvatarFallback className="bg-secondary text-xs text-muted-foreground">
                       {player.name.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-foreground">
+                  <span className="text-sm font-medium text-foreground hover:underline">
                     {player.name}
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="text-center text-sm font-mono text-[hsl(var(--success))]">
+              <TableCell className="text-center font-mono text-sm text-[hsl(var(--success))]">
                 {player.kills}
               </TableCell>
-              <TableCell className="text-center text-sm font-mono text-destructive">
+              <TableCell className="text-center font-mono text-sm text-destructive">
                 {player.deaths}
               </TableCell>
-              <TableCell className="text-center text-sm font-mono text-muted-foreground">
+              <TableCell className="text-center font-mono text-sm text-muted-foreground">
                 {player.assists}
               </TableCell>
-              <TableCell className="text-right text-sm font-mono text-foreground">
+              <TableCell className="text-right font-mono text-sm text-foreground">
                 {player.elo.toLocaleString()}
               </TableCell>
             </TableRow>
@@ -125,11 +147,19 @@ function TeamRoster({
 }
 
 export function MatchDetail() {
-  const { selectedMatch, setSelectedMatch } = useApp()
+  const { selectedMatch, setSelectedMatch, setViewingPlayer } = useApp()
 
   if (!selectedMatch) return null
 
   const isWin = selectedMatch.result === "Win"
+
+  function handlePlayerClick(name: string) {
+    const player = findPlayer(name)
+    if (player) {
+      setSelectedMatch(null)
+      setViewingPlayer(player)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6 animate-slide-in-right">
@@ -158,7 +188,7 @@ export function MatchDetail() {
           {/* Result overlay */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
             <Badge
-              className={`text-lg px-4 py-1 ${
+              className={`px-4 py-1 text-lg ${
                 isWin
                   ? "border-transparent bg-[hsl(var(--success))]/20 text-[hsl(var(--success))]"
                   : "border-transparent bg-destructive/20 text-destructive"
@@ -175,7 +205,7 @@ export function MatchDetail() {
                 <Shield className="h-3.5 w-3.5 text-[hsl(199,89%,48%)]" />
                 <span className="font-bold text-[hsl(199,89%,48%)]">CT</span>
               </span>
-              <span className="text-lg font-bold font-mono text-foreground">
+              <span className="font-mono text-lg font-bold text-foreground">
                 {selectedMatch.score}
               </span>
               <span className="flex items-center gap-1.5">
@@ -197,7 +227,7 @@ export function MatchDetail() {
             {selectedMatch.duration}
           </div>
           <div
-            className={`flex items-center gap-1 text-sm font-semibold font-mono ${
+            className={`flex items-center gap-1 font-mono text-sm font-semibold ${
               selectedMatch.eloChange > 0
                 ? "text-[hsl(var(--success))]"
                 : "text-destructive"
@@ -215,11 +245,13 @@ export function MatchDetail() {
           players={selectedMatch.teamCT}
           side="CT"
           isWinner={isWin}
+          onPlayerClick={handlePlayerClick}
         />
         <TeamRoster
           players={selectedMatch.teamT}
           side="T"
           isWinner={!isWin}
+          onPlayerClick={handlePlayerClick}
         />
       </div>
     </div>

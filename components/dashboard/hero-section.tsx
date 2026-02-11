@@ -1,6 +1,6 @@
 "use client"
 
-import { Shield, Trophy, Star } from "lucide-react"
+import { Shield, Trophy, Star, CheckCircle2 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useApp } from "@/lib/app-context"
@@ -73,7 +73,13 @@ export function HeroSection() {
               Pro
             </Badge>
           </div>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            {profile.bloxlinkVerified && (
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="h-4 w-4 text-[hsl(var(--success))]" />
+                <span className="text-[hsl(var(--success))]">Bloxlink Verified</span>
+              </span>
+            )}
             <span className="flex items-center gap-1.5">
               <Star className="h-4 w-4 text-primary" />
               Top 5%

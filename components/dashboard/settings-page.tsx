@@ -1,15 +1,17 @@
 "use client"
 
-import React from "react"
-
-import { useState } from "react"
+import React, { useState, useCallback } from "react"
 import {
   Settings,
-  User,
   Palette,
   Link2,
   Check,
   Pencil,
+  RefreshCw,
+  CheckCircle2,
+  Loader2,
+  User,
+  ExternalLink,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -18,16 +20,6 @@ import { Input } from "@/components/ui/input"
 import { useApp } from "@/lib/app-context"
 import type { PlayerProfile } from "@/lib/app-context"
 import { cn } from "@/lib/utils"
-
-const AVATAR_OPTIONS = [
-  "/avatar.jpg",
-  "/avatars/avatar-1.jpg",
-  "/avatars/avatar-2.jpg",
-  "/avatars/avatar-3.jpg",
-  "/avatars/avatar-4.jpg",
-  "/avatars/avatar-5.jpg",
-  "/avatars/avatar-6.jpg",
-]
 
 const FRAME_OPTIONS: {
   id: PlayerProfile["frame"]
@@ -106,6 +98,9 @@ export function SettingsPage() {
   const [draftName, setDraftName] = useState(profile.username)
   const [draftRobloxId, setDraftRobloxId] = useState(profile.robloxId)
   const [saved, setSaved] = useState(false)
+  const [syncing, setSyncing] = useState(false)
+  const [relinking, setRelinking] = useState(false)
+  const [relinkId, setRelinkId] = useState("")
 
   function saveName() {
     if (draftName.trim()) {
@@ -120,7 +115,40 @@ export function SettingsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  const activeFrame = FRAME_OPTIONS.find((f) => f.id === profile.frame) ?? FRAME_OPTIONS[0]
+  /** Re-sync the Roblox avatar from the linked ID */
+  const syncAvatar = useCallback(() => {
+    setSyncing(true)
+    // Simulate a brief network request
+    setTimeout(() => {
+      const newUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${profile.robloxId}&width=420&height=420&format=png&t=${Date.now()}`
+      setProfile({ ...profile, avatar: newUrl })
+      setSyncing(false)
+      flashSaved()
+    }, 1200)
+  }, [profile, setProfile])
+
+  /** Re-link to a different Roblox account */
+  const handleRelink = useCallback(() => {
+    if (!relinkId.trim()) return
+    setRelinking(true)
+    setTimeout(() => {
+      const newUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${relinkId.trim()}&width=420&height=420&format=png`
+      setProfile({
+        ...profile,
+        robloxId: relinkId.trim(),
+        robloxUsername: `User_${relinkId.trim().slice(0, 5)}`,
+        avatar: newUrl,
+        bloxlinkVerified: true,
+      })
+      setDraftRobloxId(relinkId.trim())
+      setRelinking(false)
+      setRelinkId("")
+      flashSaved()
+    }, 2000)
+  }, [relinkId, profile, setProfile])
+
+  const activeFrame =
+    FRAME_OPTIONS.find((f) => f.id === profile.frame) ?? FRAME_OPTIONS[0]
 
   return (
     <div className="flex flex-col gap-6 animate-page-in">
@@ -145,21 +173,29 @@ export function SettingsPage() {
 
       {/* Live preview */}
       <div className="rounded-xl border border-border bg-card p-6">
-        <p className="mb-4 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        <p className="mb-4 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Live Preview
         </p>
         <div className="flex items-center gap-4">
           <div className="relative">
             {activeFrame.glowClass && (
-              <div className={cn("absolute -inset-1 rounded-full blur-md", activeFrame.glowClass)} />
+              <div
+                className={cn(
+                  "absolute -inset-1 rounded-full blur-md",
+                  activeFrame.glowClass,
+                )}
+              />
             )}
             <Avatar
               className={cn(
                 "relative h-16 w-16 border-2",
-                activeFrame.borderClass
+                activeFrame.borderClass,
               )}
             >
-              <AvatarImage src={profile.avatar || "/placeholder.svg"} alt="Preview avatar" />
+              <AvatarImage
+                src={profile.avatar || "/placeholder.svg"}
+                alt="Preview avatar"
+              />
               <AvatarFallback className="bg-secondary text-muted-foreground">
                 {profile.username.slice(0, 2)}
               </AvatarFallback>
@@ -170,8 +206,17 @@ export function SettingsPage() {
               {profile.username}
             </p>
             <p className="text-xs text-muted-foreground">
-              Frame: <span className={activeFrame.color}>{activeFrame.label}</span>
+              Frame:{" "}
+              <span className={activeFrame.color}>{activeFrame.label}</span>
             </p>
+            {profile.bloxlinkVerified && (
+              <div className="mt-1 flex items-center gap-1.5">
+                <CheckCircle2 className="h-3 w-3 text-[hsl(var(--success))]" />
+                <span className="text-xs text-muted-foreground">
+                  Bloxlink Verified
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -238,45 +283,66 @@ export function SettingsPage() {
         </div>
       </SectionCard>
 
-      {/* Avatar Picker */}
+      {/* Roblox Avatar (auto-synced) */}
       <SectionCard
         icon={<User className="h-4 w-4 text-primary" />}
-        title="Avatar"
-        description="Choose your profile avatar"
+        title="Roblox Avatar"
+        description="Your avatar is automatically synced from your linked Roblox account"
       >
-        <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">
-          {AVATAR_OPTIONS.map((src) => (
-            <button
-              key={src}
-              type="button"
-              onClick={() => {
-                setProfile({ ...profile, avatar: src })
-                flashSaved()
-              }}
-              className={cn(
-                "group relative overflow-hidden rounded-lg border-2 transition-all",
-                profile.avatar === src
-                  ? "border-primary glow-primary-sm"
-                  : "border-border hover:border-primary/40"
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-4 rounded-lg border border-border bg-secondary/30 p-4">
+            <Avatar className="h-20 w-20 border-2 border-primary/30">
+              <AvatarImage
+                src={profile.avatar || "/placeholder.svg"}
+                alt="Roblox avatar"
+                className="object-cover"
+              />
+              <AvatarFallback className="bg-secondary text-xl text-muted-foreground">
+                {profile.username.slice(0, 2)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-1 flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold text-foreground">
+                  {profile.robloxUsername || profile.username}
+                </span>
+                {profile.bloxlinkVerified && (
+                  <Badge className="border-[hsl(var(--success))]/20 bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]">
+                    <CheckCircle2 className="mr-1 h-3 w-3" />
+                    Verified
+                  </Badge>
+                )}
+              </div>
+              <span className="text-xs text-muted-foreground font-mono">
+                Roblox ID: {profile.robloxId || "Not linked"}
+              </span>
+              {profile.robloxId && (
+                <a
+                  href={`https://www.roblox.com/users/${profile.robloxId}/profile`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 flex items-center gap-1 text-xs text-primary hover:text-primary/80"
+                >
+                  View Roblox Profile
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               )}
-            >
-              <Avatar className="h-full w-full rounded-none">
-                <AvatarImage
-                  src={src || "/placeholder.svg"}
-                  alt="Avatar option"
-                  className="aspect-square object-cover"
-                />
-                <AvatarFallback className="rounded-none bg-secondary text-muted-foreground">
-                  ?
-                </AvatarFallback>
-              </Avatar>
-              {profile.avatar === src && (
-                <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
-                  <Check className="h-5 w-5 text-primary" />
-                </div>
-              )}
-            </button>
-          ))}
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-fit gap-2 border-border text-foreground hover:bg-secondary bg-transparent"
+            onClick={syncAvatar}
+            disabled={syncing}
+          >
+            {syncing ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="h-4 w-4" />
+            )}
+            {syncing ? "Syncing..." : "Re-sync Avatar"}
+          </Button>
         </div>
       </SectionCard>
 
@@ -299,15 +365,28 @@ export function SettingsPage() {
                 "flex flex-col items-center gap-3 rounded-xl border p-4 transition-all",
                 profile.frame === frame.id
                   ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/30 hover:bg-secondary/30"
+                  : "border-border hover:border-primary/30 hover:bg-secondary/30",
               )}
             >
               <div className="relative">
                 {frame.glowClass && (
-                  <div className={cn("absolute -inset-1 rounded-full blur-md opacity-60", frame.glowClass)} />
+                  <div
+                    className={cn(
+                      "absolute -inset-1 rounded-full opacity-60 blur-md",
+                      frame.glowClass,
+                    )}
+                  />
                 )}
-                <Avatar className={cn("relative h-12 w-12 border-2", frame.borderClass)}>
-                  <AvatarImage src={profile.avatar || "/placeholder.svg"} alt="Frame preview" />
+                <Avatar
+                  className={cn(
+                    "relative h-12 w-12 border-2",
+                    frame.borderClass,
+                  )}
+                >
+                  <AvatarImage
+                    src={profile.avatar || "/placeholder.svg"}
+                    alt="Frame preview"
+                  />
                   <AvatarFallback className="bg-secondary text-muted-foreground">
                     P
                   </AvatarFallback>
@@ -324,35 +403,38 @@ export function SettingsPage() {
         </div>
       </SectionCard>
 
-      {/* Roblox ID */}
+      {/* Re-link Roblox Account */}
       <SectionCard
         icon={<Link2 className="h-4 w-4 text-primary" />}
-        title="Roblox Account"
-        description="Link your Roblox account by entering your User ID"
+        title="Re-link Roblox Account"
+        description="Connect a different Roblox account via Bloxlink"
       >
-        <div className="flex items-center gap-3">
-          <Input
-            value={draftRobloxId}
-            onChange={(e) => setDraftRobloxId(e.target.value)}
-            className="max-w-xs border-border bg-background text-foreground font-mono"
-            placeholder="e.g. 123456789"
-          />
-          <Button
-            size="sm"
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={() => {
-              setProfile({ ...profile, robloxId: draftRobloxId })
-              flashSaved()
-            }}
-          >
-            Link
-          </Button>
-          {profile.robloxId && (
-            <Badge className="border-[hsl(var(--success))]/20 bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]">
-              <Check className="mr-1 h-3 w-3" />
-              Linked
-            </Badge>
-          )}
+        <div className="flex flex-col gap-3">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Enter a new Roblox User ID to re-verify and link a different account.
+            Your avatar will update automatically.
+          </p>
+          <div className="flex items-center gap-3">
+            <Input
+              value={relinkId}
+              onChange={(e) => setRelinkId(e.target.value)}
+              className="max-w-xs border-border bg-background font-mono text-foreground"
+              placeholder="e.g. 123456789"
+            />
+            <Button
+              size="sm"
+              className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+              onClick={handleRelink}
+              disabled={relinking || !relinkId.trim()}
+            >
+              {relinking ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Link2 className="h-4 w-4" />
+              )}
+              {relinking ? "Verifying..." : "Re-link"}
+            </Button>
+          </div>
         </div>
       </SectionCard>
     </div>
