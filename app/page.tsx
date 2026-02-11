@@ -7,6 +7,7 @@ import { MatchHistory } from "@/components/dashboard/match-history"
 import { MatchDetail } from "@/components/dashboard/match-detail"
 import { Leaderboard } from "@/components/dashboard/leaderboard"
 import { SettingsPage } from "@/components/dashboard/settings-page"
+import { LandingPage } from "@/components/landing-page"
 import { AppProvider, useApp } from "@/lib/app-context"
 
 function DashboardView() {
@@ -45,13 +46,25 @@ function PageContent() {
   )
 }
 
+function AppShell() {
+  const { isAuthenticated } = useApp()
+
+  if (!isAuthenticated) {
+    return <LandingPage />
+  }
+
+  return (
+    <div className="min-h-screen bg-background animate-fade-in">
+      <Header />
+      <PageContent />
+    </div>
+  )
+}
+
 export default function Page() {
   return (
     <AppProvider>
-      <div className="min-h-screen bg-background">
-        <Header />
-        <PageContent />
-      </div>
+      <AppShell />
     </AppProvider>
   )
 }

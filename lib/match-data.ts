@@ -1,10 +1,9 @@
 import type { MatchData } from "./app-context"
 
 const MAP_IMAGES: Record<string, string> = {
-  "Arsenal Ruins": "/maps/arsenal-ruins.jpg",
-  "Neon District": "/maps/neon-district.jpg",
-  "Sky Fortress": "/maps/sky-fortress.jpg",
-  "Cyber Grid": "/maps/cyber-grid.jpg",
+  SeaSide: "/maps/seaside.jpg",
+  Mirage: "/maps/mirage.jpg",
+  Vertigo: "/maps/vertigo.jpg",
 }
 
 export const matches: MatchData[] = [
@@ -12,18 +11,19 @@ export const matches: MatchData[] = [
     id: 1,
     date: "Feb 11, 2026",
     result: "Win",
-    map: "Arsenal Ruins",
-    mapImage: MAP_IMAGES["Arsenal Ruins"],
+    map: "SeaSide",
+    mapImage: MAP_IMAGES["SeaSide"],
     eloChange: 25,
     duration: "14:32",
-    teamA: [
+    score: "13 - 7",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 28, deaths: 12, assists: 5, elo: 1450 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 22, deaths: 14, assists: 8, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 19, deaths: 16, assists: 11, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 15, deaths: 13, assists: 9, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 21, deaths: 10, assists: 6, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "DarkSpectre", avatar: "/avatars/avatar-5.jpg", kills: 18, deaths: 22, assists: 4, elo: 1400 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 16, deaths: 20, assists: 7, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 14, deaths: 19, assists: 10, elo: 1390 },
@@ -35,18 +35,19 @@ export const matches: MatchData[] = [
     id: 2,
     date: "Feb 11, 2026",
     result: "Win",
-    map: "Neon District",
-    mapImage: MAP_IMAGES["Neon District"],
+    map: "Mirage",
+    mapImage: MAP_IMAGES["Mirage"],
     eloChange: 22,
     duration: "18:05",
-    teamA: [
+    score: "13 - 9",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 24, deaths: 15, assists: 7, elo: 1425 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 20, deaths: 17, assists: 10, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 18, deaths: 16, assists: 12, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 16, deaths: 14, assists: 8, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 19, deaths: 13, assists: 5, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "BlazeFury", avatar: "/avatars/avatar-5.jpg", kills: 17, deaths: 20, assists: 6, elo: 1360 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 15, deaths: 19, assists: 8, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 13, deaths: 18, assists: 9, elo: 1390 },
@@ -58,18 +59,19 @@ export const matches: MatchData[] = [
     id: 3,
     date: "Feb 10, 2026",
     result: "Loss",
-    map: "Sky Fortress",
-    mapImage: MAP_IMAGES["Sky Fortress"],
+    map: "Vertigo",
+    mapImage: MAP_IMAGES["Vertigo"],
     eloChange: -25,
     duration: "12:47",
-    teamA: [
+    score: "6 - 13",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 14, deaths: 22, assists: 3, elo: 1403 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 12, deaths: 19, assists: 6, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 10, deaths: 20, assists: 8, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 8, deaths: 18, assists: 5, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 11, deaths: 17, assists: 4, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "OmegaPrime", avatar: "/avatars/avatar-5.jpg", kills: 26, deaths: 11, assists: 9, elo: 1520 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 22, deaths: 12, assists: 7, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 18, deaths: 10, assists: 11, elo: 1390 },
@@ -81,18 +83,19 @@ export const matches: MatchData[] = [
     id: 4,
     date: "Feb 10, 2026",
     result: "Win",
-    map: "Arsenal Ruins",
-    mapImage: MAP_IMAGES["Arsenal Ruins"],
+    map: "SeaSide",
+    mapImage: MAP_IMAGES["SeaSide"],
     eloChange: 28,
     duration: "16:21",
-    teamA: [
+    score: "13 - 5",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 30, deaths: 10, assists: 8, elo: 1428 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 25, deaths: 12, assists: 6, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 20, deaths: 14, assists: 10, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 18, deaths: 11, assists: 7, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 22, deaths: 9, assists: 5, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "DarkSpectre", avatar: "/avatars/avatar-5.jpg", kills: 15, deaths: 24, assists: 3, elo: 1400 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 13, deaths: 22, assists: 5, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 11, deaths: 20, assists: 8, elo: 1390 },
@@ -104,18 +107,19 @@ export const matches: MatchData[] = [
     id: 5,
     date: "Feb 9, 2026",
     result: "Loss",
-    map: "Cyber Grid",
-    mapImage: MAP_IMAGES["Cyber Grid"],
+    map: "Mirage",
+    mapImage: MAP_IMAGES["Mirage"],
     eloChange: -19,
     duration: "20:10",
-    teamA: [
+    score: "8 - 13",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 16, deaths: 20, assists: 5, elo: 1400 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 14, deaths: 18, assists: 7, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 12, deaths: 19, assists: 9, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 10, deaths: 17, assists: 6, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 13, deaths: 16, assists: 4, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "OmegaPrime", avatar: "/avatars/avatar-5.jpg", kills: 24, deaths: 13, assists: 8, elo: 1520 },
       { name: "BlazeFury", avatar: "/avatars/avatar-6.jpg", kills: 20, deaths: 14, assists: 6, elo: 1360 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 17, deaths: 12, assists: 10, elo: 1390 },
@@ -127,18 +131,19 @@ export const matches: MatchData[] = [
     id: 6,
     date: "Feb 9, 2026",
     result: "Win",
-    map: "Neon District",
-    mapImage: MAP_IMAGES["Neon District"],
+    map: "Vertigo",
+    mapImage: MAP_IMAGES["Vertigo"],
     eloChange: 25,
     duration: "15:43",
-    teamA: [
+    score: "13 - 10",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 26, deaths: 14, assists: 6, elo: 1419 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 21, deaths: 16, assists: 9, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 19, deaths: 15, assists: 11, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 17, deaths: 13, assists: 8, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 20, deaths: 12, assists: 5, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "DarkSpectre", avatar: "/avatars/avatar-5.jpg", kills: 16, deaths: 21, assists: 5, elo: 1400 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 14, deaths: 20, assists: 7, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 12, deaths: 19, assists: 9, elo: 1390 },
@@ -150,18 +155,19 @@ export const matches: MatchData[] = [
     id: 7,
     date: "Feb 8, 2026",
     result: "Win",
-    map: "Sky Fortress",
-    mapImage: MAP_IMAGES["Sky Fortress"],
+    map: "SeaSide",
+    mapImage: MAP_IMAGES["SeaSide"],
     eloChange: 30,
     duration: "11:55",
-    teamA: [
+    score: "13 - 2",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 32, deaths: 8, assists: 10, elo: 1394 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 24, deaths: 10, assists: 8, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 22, deaths: 12, assists: 12, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 20, deaths: 9, assists: 7, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 25, deaths: 7, assists: 6, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "BlazeFury", avatar: "/avatars/avatar-5.jpg", kills: 10, deaths: 26, assists: 3, elo: 1360 },
       { name: "NeonBlade", avatar: "/avatars/avatar-6.jpg", kills: 8, deaths: 24, assists: 5, elo: 1350 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 9, deaths: 22, assists: 7, elo: 1390 },
@@ -173,18 +179,19 @@ export const matches: MatchData[] = [
     id: 8,
     date: "Feb 8, 2026",
     result: "Loss",
-    map: "Cyber Grid",
-    mapImage: MAP_IMAGES["Cyber Grid"],
+    map: "Mirage",
+    mapImage: MAP_IMAGES["Mirage"],
     eloChange: -25,
     duration: "22:08",
-    teamA: [
+    score: "7 - 13",
+    teamCT: [
       { name: "Player_1", avatar: "/avatar.jpg", kills: 18, deaths: 24, assists: 4, elo: 1364 },
       { name: "xNova", avatar: "/avatars/avatar-1.jpg", kills: 15, deaths: 21, assists: 6, elo: 1380 },
       { name: "ByteStorm", avatar: "/avatars/avatar-2.jpg", kills: 13, deaths: 22, assists: 8, elo: 1420 },
       { name: "ZeroGrav", avatar: "/avatars/avatar-3.jpg", kills: 11, deaths: 20, assists: 5, elo: 1310 },
       { name: "PhantomX", avatar: "/avatars/avatar-4.jpg", kills: 14, deaths: 19, assists: 3, elo: 1475 },
     ],
-    teamB: [
+    teamT: [
       { name: "OmegaPrime", avatar: "/avatars/avatar-5.jpg", kills: 28, deaths: 14, assists: 10, elo: 1520 },
       { name: "DarkSpectre", avatar: "/avatars/avatar-6.jpg", kills: 22, deaths: 13, assists: 7, elo: 1400 },
       { name: "VortexKing", avatar: "/avatars/avatar-1.jpg", kills: 19, deaths: 15, assists: 9, elo: 1390 },

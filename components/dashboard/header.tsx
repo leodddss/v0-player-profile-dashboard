@@ -44,7 +44,7 @@ const NAV_ITEMS: { label: string; value: PageView; icon: React.ReactNode }[] = [
 ]
 
 export function Header() {
-  const { currentPage, setCurrentPage, profile } = useApp()
+  const { currentPage, setCurrentPage, profile, logout } = useApp()
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -136,7 +136,10 @@ export function Header() {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-border" />
-              <DropdownMenuItem className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive">
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
+                onClick={logout}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Log out
               </DropdownMenuItem>

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Peekit - Competitive Roblox Matchmaking",
+  title: "Peekit - Competitive BloxStrike Matchmaking",
   description:
-    "Compete in ranked Roblox matches. Track your Elo, climb the leaderboard, and dominate the competition.",
+    "The first competitive platform for BloxStrike. Compete in ranked matches, track your Elo, and climb the leaderboard.",
 }
 
 export const viewport: Viewport = {

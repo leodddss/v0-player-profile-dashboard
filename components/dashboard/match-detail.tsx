@@ -2,7 +2,8 @@
 
 import {
   ArrowLeft,
-  Swords,
+  Shield,
+  Crosshair,
   Clock,
   Calendar,
   Target,
@@ -22,26 +23,37 @@ import {
 } from "@/components/ui/table"
 import { useApp } from "@/lib/app-context"
 import type { TeamPlayer } from "@/lib/app-context"
+import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 function TeamRoster({
   players,
-  label,
+  side,
   isWinner,
 }: {
   players: TeamPlayer[]
-  label: string
+  side: "CT" | "T"
   isWinner: boolean
 }) {
   const totalKills = players.reduce((sum, p) => sum + p.kills, 0)
   const totalDeaths = players.reduce((sum, p) => sum + p.deaths, 0)
 
+  const isCT = side === "CT"
+  const sideLabel = isCT ? "Counter-Terrorists" : "Terrorists"
+  const sideColor = isCT ? "text-[hsl(199,89%,48%)]" : "text-[hsl(45,93%,58%)]"
+  const sideBorderColor = isCT
+    ? "border-[hsl(199,89%,48%)]/20"
+    : "border-[hsl(45,93%,58%)]/20"
+  const SideIcon = isCT ? Shield : Crosshair
+
   return (
-    <div className="rounded-xl border border-border bg-card overflow-hidden">
+    <div className={cn("rounded-xl border bg-card overflow-hidden", sideBorderColor)}>
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
-          <Swords className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-semibold text-foreground">{label}</span>
+          <SideIcon className={cn("h-4 w-4", sideColor)} />
+          <span className={cn("text-sm font-semibold", sideColor)}>
+            {sideLabel}
+          </span>
           {isWinner && (
             <Badge className="border-transparent bg-[hsl(var(--success))]/10 text-[hsl(var(--success))]">
               Winner
@@ -157,6 +169,20 @@ export function MatchDetail() {
             <h2 className="text-2xl font-bold text-foreground text-balance">
               {selectedMatch.map}
             </h2>
+            {/* Score */}
+            <div className="flex items-center gap-3 text-sm">
+              <span className="flex items-center gap-1.5">
+                <Shield className="h-3.5 w-3.5 text-[hsl(199,89%,48%)]" />
+                <span className="font-bold text-[hsl(199,89%,48%)]">CT</span>
+              </span>
+              <span className="text-lg font-bold font-mono text-foreground">
+                {selectedMatch.score}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="font-bold text-[hsl(45,93%,58%)]">T</span>
+                <Crosshair className="h-3.5 w-3.5 text-[hsl(45,93%,58%)]" />
+              </span>
+            </div>
           </div>
         </div>
 
@@ -186,13 +212,13 @@ export function MatchDetail() {
       {/* Team rosters */}
       <div className="grid gap-4 lg:grid-cols-2">
         <TeamRoster
-          players={selectedMatch.teamA}
-          label="Team Alpha"
+          players={selectedMatch.teamCT}
+          side="CT"
           isWinner={isWin}
         />
         <TeamRoster
-          players={selectedMatch.teamB}
-          label="Team Bravo"
+          players={selectedMatch.teamT}
+          side="T"
           isWinner={!isWin}
         />
       </div>

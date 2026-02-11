@@ -12,8 +12,9 @@ export interface MatchData {
   mapImage: string
   eloChange: number
   duration: string
-  teamA: TeamPlayer[]
-  teamB: TeamPlayer[]
+  score: string
+  teamCT: TeamPlayer[]
+  teamT: TeamPlayer[]
 }
 
 export interface TeamPlayer {
@@ -33,6 +34,9 @@ export interface PlayerProfile {
 }
 
 interface AppContextType {
+  isAuthenticated: boolean
+  login: (username: string) => void
+  logout: () => void
   currentPage: PageView
   setCurrentPage: (page: PageView) => void
   selectedMatch: MatchData | null
@@ -45,6 +49,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null)
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [currentPage, setCurrentPageRaw] = useState<PageView>("dashboard")
   const [selectedMatch, setSelectedMatch] = useState<MatchData | null>(null)
   const [profile, setProfile] = useState<PlayerProfile>({
@@ -55,6 +60,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   })
   const [animationKey, setAnimationKey] = useState(0)
 
+  const login = useCallback((username: string) => {
+    setProfile((prev) => ({ ...prev, username: username || prev.username }))
+    setIsAuthenticated(true)
+    setAnimationKey((k) => k + 1)
+  }, [])
+
+  const logout = useCallback(() => {
+    setIsAuthenticated(false)
+    setCurrentPageRaw("dashboard")
+    setSelectedMatch(null)
+    setAnimationKey((k) => k + 1)
+  }, [])
+
   const setCurrentPage = useCallback((page: PageView) => {
     setSelectedMatch(null)
     setCurrentPageRaw(page)
@@ -64,6 +82,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider
       value={{
+        isAuthenticated,
+        login,
+        logout,
         currentPage,
         setCurrentPage,
         selectedMatch,
