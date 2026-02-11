@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useCallback } from "react"
+import { getRobloxAvatar } from "@/lib/roblox-avatar"
 
 export type PageView = "dashboard" | "leaderboard" | "settings" | "profile"
 
@@ -84,14 +85,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [animationKey, setAnimationKey] = useState(0)
 
   const login = useCallback((username: string, robloxUsername: string, robloxId: string) => {
-    const robloxAvatar = `https://www.roblox.com/headshot-thumbnail/image?userId=${robloxId}&width=420&height=420&format=png`
     setProfile((prev) => ({
       ...prev,
       username: username || prev.username,
       robloxUsername,
       robloxId,
       bloxlinkVerified: true,
-      avatar: robloxAvatar,
+      avatar: getRobloxAvatar(robloxId),
     }))
     setIsAuthenticated(true)
     setAnimationKey((k) => k + 1)

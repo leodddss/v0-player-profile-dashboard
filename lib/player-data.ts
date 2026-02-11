@@ -1,4 +1,5 @@
 import type { PublicPlayer } from "./app-context"
+import { getRobloxAvatar } from "./roblox-avatar"
 
 /**
  * Shared player data used in leaderboard, match rosters, and public profiles.
@@ -8,7 +9,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 1,
     name: "OmegaPrime",
-    avatar: "/avatars/avatar-5.jpg",
+    avatar: getRobloxAvatar("110293847"),
     robloxId: "110293847",
     elo: 2150,
     wins: 487,
@@ -21,7 +22,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 2,
     name: "PhantomX",
-    avatar: "/avatars/avatar-4.jpg",
+    avatar: getRobloxAvatar("220384756"),
     robloxId: "220384756",
     elo: 1980,
     wins: 412,
@@ -34,7 +35,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 3,
     name: "StormBreak",
-    avatar: "/avatars/avatar-3.jpg",
+    avatar: getRobloxAvatar("330475819"),
     robloxId: "330475819",
     elo: 1870,
     wins: 365,
@@ -47,7 +48,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 4,
     name: "Player_1",
-    avatar: "/avatar.jpg",
+    avatar: getRobloxAvatar("440567892"),
     robloxId: "440567892",
     elo: 1450,
     wins: 218,
@@ -60,7 +61,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 5,
     name: "xNova",
-    avatar: "/avatars/avatar-1.jpg",
+    avatar: getRobloxAvatar("550612345"),
     robloxId: "550612345",
     elo: 1380,
     wins: 195,
@@ -73,7 +74,7 @@ export const allPlayers: PublicPlayer[] = [
   {
     rank: 6,
     name: "ByteStorm",
-    avatar: "/avatars/avatar-2.jpg",
+    avatar: getRobloxAvatar("660723456"),
     robloxId: "660723456",
     elo: 1420,
     wins: 210,
